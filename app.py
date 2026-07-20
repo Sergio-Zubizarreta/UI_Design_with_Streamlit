@@ -226,10 +226,4 @@ else:
                 "such as conferences in Amsterdam and North America."
             )
 
-            # Placeholder for future charts / maps
-            st.subheader("Next steps")
-            st.write(
-                "- Create charts using the Stars and Forks columns.\n"
-                "- Add more event locations or user data based on usability testing.\n"
-                "- Refine filters and layout based on feedback from Blender learners."
-            )
+        
