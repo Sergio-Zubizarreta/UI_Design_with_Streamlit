@@ -17,6 +17,12 @@ st.write(
 )
 
 # ---------------------------
+# Session state: track if user has searched
+# ---------------------------
+if "has_searched" not in st.session_state:
+    st.session_state.has_searched = False
+
+# ---------------------------
 # Sidebar controls
 # ---------------------------
 with st.sidebar:
@@ -43,6 +49,9 @@ with st.sidebar:
 
 search_button = st.button("Search GitHub for Blender add-ons…")
 
+# When the button is clicked, remember that a search has occurred
+if search_button:
+    st.session_state.has_searched = True
 
 # ---------------------------
 # Helper: build GitHub query URL
@@ -110,9 +119,17 @@ def fetch_repos(keyword: str, sort_by: str, per_page: int = 50) -> pd.DataFrame:
 
 
 # ------------------------------
-# Run search when button is clicked
+# Show either initial message or results
 # ------------------------------
-if search_button:
+if not st.session_state.has_searched:
+    # No search yet in this session
+    st.info(
+        "Set your filters in the sidebar, then click "
+        "'Search GitHub for Blender add-ons…' to load data from GitHub."
+    )
+
+else:
+    # We are in “results mode”: use current filters every rerun
     st.info("Searching GitHub for Blender add-ons...")
 
     repos_df = fetch_repos(keyword=keyword, sort_by=sort_by, per_page=50)
@@ -195,7 +212,6 @@ if search_button:
             # -------- Map: Blender Developers and Community Events --------
             st.subheader("Blender Developers and Community Events")
 
-            # Approximate city locations: HQ and major events
             map_data = pd.DataFrame(
                 {
                     "lat": [52.37, 52.37, 30.27],   # Amsterdam, Amsterdam, Austin
@@ -210,9 +226,10 @@ if search_button:
                 "such as conferences in Amsterdam and North America."
             )
 
-            
-else:
-    st.info(
-        "Set your filters in the sidebar, then click "
-        "'Search GitHub for Blender add-ons…' to load data from GitHub."
-    )
+            # Placeholder for future charts / maps
+            st.subheader("Next steps")
+            st.write(
+                "- Create charts using the Stars and Forks columns.\n"
+                "- Add more event locations or user data based on usability testing.\n"
+                "- Refine filters and layout based on feedback from Blender learners."
+            )
